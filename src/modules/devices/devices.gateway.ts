@@ -32,4 +32,23 @@ export class DevicesGateway {
     const userId = this.deviceSocket.getConnectedClientID(client);
     this.deviceSocket.removeClient(userId);
   }
+
+  // @SubscribeMessage('statistics')
+  // typing(
+  //   @MessageBody() data: { participantId: string; isTyping: boolean },
+  //   @ConnectedSocket() client: Socket,
+  // ) {
+  //   const userId = client.handshake.query.userId.toString();
+  //   this.logger.log(`userId : ${userId}`);
+  //   this.participant_typing[userId] = data.isTyping;
+  //   client.broadcast.emit('typing-list', {
+  //     userId: data.participantId,
+  //     typing: this.participant_typing,
+  //   });
+  //   client.broadcast.emit('typing', {
+  //     userId: data.participantId,
+  //     participantId: userId,
+  //     isTyping: data.isTyping,
+  //   });
+  // }
 }
