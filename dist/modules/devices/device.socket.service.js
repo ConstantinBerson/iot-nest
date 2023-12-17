@@ -14,8 +14,10 @@ exports.DeviceSocketService = void 0;
 const common_1 = require("@nestjs/common");
 const socket_io_1 = require("socket.io");
 const websockets_1 = require("@nestjs/websockets");
+const devices_service_1 = require("./devices.service");
 let DeviceSocketService = DeviceSocketService_1 = class DeviceSocketService {
-    constructor() {
+    constructor(devicesService) {
+        this.devicesService = devicesService;
         this.logger = new common_1.Logger(DeviceSocketService_1.name);
         this.connectedClients = new Map();
         this.getConnectedClients = () => {
@@ -55,11 +57,29 @@ let DeviceSocketService = DeviceSocketService_1 = class DeviceSocketService {
         this.logger.log('⚡ Socket service initialized ⚡');
         this.logger.log('-----------------------');
     }
-    emitMessage(clientId, data) {
-        this.emitToClient(clientId, 'findMessage', data);
+    emitStatistics(statisticsDto) {
+        const client = this.connectedClients.get(statisticsDto.developerId);
+        if (client) {
+            this.logger.log('Emit to client initialized');
+            const interval = setInterval(() => {
+                client.emit('statistics', this.devicesService.getStatistique(statisticsDto));
+                if (statisticsDto.state) {
+                    clearInterval(interval);
+                }
+            }, 2000);
+        }
     }
-    emitConversationList(clientId, data) {
-        this.emitToClient(clientId, 'findConversationList', data);
+    emitDeviceStatus(statisticsDto) {
+        const client = this.connectedClients.get(statisticsDto.developerId);
+        if (client) {
+            this.logger.log('Emit to client initialized');
+            const interval = setInterval(() => {
+                client.emit('statistics', this.devicesService.getStatistique(statisticsDto));
+                if (statisticsDto.state) {
+                    clearInterval(interval);
+                }
+            }, 2000);
+        }
     }
 };
 exports.DeviceSocketService = DeviceSocketService;
@@ -69,7 +89,7 @@ __decorate([
 ], DeviceSocketService.prototype, "io", void 0);
 exports.DeviceSocketService = DeviceSocketService = DeviceSocketService_1 = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [devices_service_1.DevicesService])
 ], DeviceSocketService);
 function isObjectEqual(objA, objB) {
     const keysA = Object.keys(objA);

@@ -5,6 +5,7 @@ import { Observable, catchError, firstValueFrom, map, throwError } from 'rxjs';
 import { SwitchStatus } from './dto/switch-status.dto';
 import { AggregateErrorHandler } from 'src/error-handler.service';
 import { AxiosError } from 'axios';
+import { Statistics } from './dto/statistic.dto';
 
 @Injectable()
 export class DevicesService {
@@ -42,6 +43,16 @@ export class DevicesService {
         catchError((error: any) => this.handleError(error)),
       );
   }
+
+  async getDeviceStatus(email, developerId, deviceId) {
+    this.logger.log('switch device init');
+    const path = `${this.url}/boulou_check_deviceStatus?developerId=${developerId}&email=${email}&deviceId=${deviceId}`;
+    return this.http.get(path).pipe(
+      map((response) => response.data),
+      catchError((error: any) => this.handleError(error)),
+    );
+  }
+
   private handleError(error: any): Observable<never> {
     if (error instanceof AxiosError) {
       this.logger.error('HTTP request error:', error.message);
@@ -51,5 +62,15 @@ export class DevicesService {
     // Log additional details about the unknown error
     this.logger.error('Unknown error details:', error);
     return throwError(() => new BadRequestException('Unknown error occurred'));
+  }
+
+  public getStatistique(statisticDto: Statistics) {
+    const { developerId, email, deviceId, period_type, period_value, state } =
+      statisticDto;
+    const path = `${this.url}/boulou_get_deviceStatistics?developerId=${developerId}&email=${email}&deviceId=${deviceId}&period_type=${period_type}&period_value=${period_value}`;
+    return this.http.get(path).pipe(
+      map((response) => response.data),
+      catchError((error: any) => this.handleError(error)),
+    );
   }
 }

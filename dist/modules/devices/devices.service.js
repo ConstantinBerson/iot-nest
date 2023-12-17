@@ -39,6 +39,11 @@ let DevicesService = DevicesService_1 = class DevicesService {
         })
             .pipe((0, rxjs_1.map)((response) => response.data), (0, rxjs_1.catchError)((error) => this.handleError(error)));
     }
+    async getDeviceStatus(email, developerId, deviceId) {
+        this.logger.log('switch device init');
+        const path = `${this.url}/boulou_check_deviceStatus?developerId=${developerId}&email=${email}&deviceId=${deviceId}`;
+        return this.http.get(path).pipe((0, rxjs_1.map)((response) => response.data), (0, rxjs_1.catchError)((error) => this.handleError(error)));
+    }
     handleError(error) {
         if (error instanceof axios_2.AxiosError) {
             this.logger.error('HTTP request error:', error.message);
@@ -46,6 +51,11 @@ let DevicesService = DevicesService_1 = class DevicesService {
         }
         this.logger.error('Unknown error details:', error);
         return (0, rxjs_1.throwError)(() => new common_1.BadRequestException('Unknown error occurred'));
+    }
+    getStatistique(statisticDto) {
+        const { developerId, email, deviceId, period_type, period_value, state } = statisticDto;
+        const path = `${this.url}/boulou_get_deviceStatistics?developerId=${developerId}&email=${email}&deviceId=${deviceId}&period_type=${period_type}&period_value=${period_value}`;
+        return this.http.get(path).pipe((0, rxjs_1.map)((response) => response.data), (0, rxjs_1.catchError)((error) => this.handleError(error)));
     }
 };
 exports.DevicesService = DevicesService;

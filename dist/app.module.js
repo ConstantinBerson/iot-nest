@@ -13,6 +13,7 @@ const app_service_1 = require("./app.service");
 const auth_module_1 = require("./modules/auth/auth.module");
 const config_1 = require("@nestjs/config");
 const jwt_1 = require("@nestjs/jwt");
+const devices_module_1 = require("./modules/devices/devices.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -20,6 +21,7 @@ exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             auth_module_1.AuthModule,
+            devices_module_1.DevicesModule,
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
             }),

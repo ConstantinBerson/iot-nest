@@ -1,11 +1,14 @@
 import { Namespace, Socket } from 'socket.io';
+import { Statistics } from './dto/statistic.dto';
+import { DevicesService } from './devices.service';
 export declare class DeviceSocketService {
+    private readonly devicesService;
     private readonly logger;
-    constructor();
+    constructor(devicesService: DevicesService);
     private connectedClients;
     io: Namespace;
-    emitMessage(clientId: string, data: any): void;
-    emitConversationList(clientId: string, data: any): void;
+    emitStatistics(statisticsDto: Statistics): void;
+    emitDeviceStatus(statisticsDto: Statistics): void;
     getConnectedClients: () => {
         [k: string]: Socket<import("socket.io/dist/typed-events").DefaultEventsMap, import("socket.io/dist/typed-events").DefaultEventsMap, import("socket.io/dist/typed-events").DefaultEventsMap, any>;
     };

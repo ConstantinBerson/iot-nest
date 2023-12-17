@@ -1,5 +1,9 @@
 import { Logger } from '@nestjs/common';
-import { WebSocketGateway } from '@nestjs/websockets';
+import {
+  WebSocketGateway,
+  SubscribeMessage,
+  MessageBody,
+} from '@nestjs/websockets';
 import { DeviceSocketService } from './device.socket.service';
 
 @WebSocketGateway()
@@ -33,22 +37,18 @@ export class DevicesGateway {
     this.deviceSocket.removeClient(userId);
   }
 
-  // @SubscribeMessage('statistics')
-  // typing(
-  //   @MessageBody() data: { participantId: string; isTyping: boolean },
-  //   @ConnectedSocket() client: Socket,
-  // ) {
-  //   const userId = client.handshake.query.userId.toString();
-  //   this.logger.log(`userId : ${userId}`);
-  //   this.participant_typing[userId] = data.isTyping;
-  //   client.broadcast.emit('typing-list', {
-  //     userId: data.participantId,
-  //     typing: this.participant_typing,
-  //   });
-  //   client.broadcast.emit('typing', {
-  //     userId: data.participantId,
-  //     participantId: userId,
-  //     isTyping: data.isTyping,
-  //   });
-  // }
+  @SubscribeMessage('statistics')
+  typing(
+    @MessageBody()
+    data: {
+      developerId: string;
+      email: string;
+      deviceId: string;
+      period_type: string;
+      period_value: string;
+      state: boolean;
+    },
+  ) {
+    this.deviceSocket.emitStatistics(data);
+  }
 }

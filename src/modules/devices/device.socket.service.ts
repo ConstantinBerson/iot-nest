@@ -1,23 +1,50 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { Namespace, Socket } from 'socket.io';
 import { WebSocketServer } from '@nestjs/websockets';
+import { Statistics } from './dto/statistic.dto';
+import { DevicesService } from './devices.service';
 
 @Injectable()
 export class DeviceSocketService {
   private readonly logger = new Logger(DeviceSocketService.name);
-  constructor() {
+  constructor(private readonly devicesService: DevicesService) {
     this.logger.log('-----------------------');
     this.logger.log('⚡ Socket service initialized ⚡');
     this.logger.log('-----------------------');
   }
   private connectedClients = new Map<string, Socket>();
   @WebSocketServer() io: Namespace;
-  emitMessage(clientId: string, data: any) {
-    this.emitToClient(clientId, 'findMessage', data);
+
+  public emitStatistics(statisticsDto: Statistics) {
+    const client = this.connectedClients.get(statisticsDto.developerId);
+    if (client) {
+      this.logger.log('Emit to client initialized');
+      const interval = setInterval(() => {
+        client.emit(
+          'statistics',
+          this.devicesService.getStatistique(statisticsDto),
+        );
+        if (statisticsDto.state) {
+          clearInterval(interval);
+        }
+      }, 2000);
+    }
   }
 
-  emitConversationList(clientId: string, data: any) {
-    this.emitToClient(clientId, 'findConversationList', data);
+  public emitDeviceStatus(statisticsDto: Statistics) {
+    const client = this.connectedClients.get(statisticsDto.developerId);
+    if (client) {
+      this.logger.log('Emit to client initialized');
+      const interval = setInterval(() => {
+        client.emit(
+          'statistics',
+          this.devicesService.getStatistique(statisticsDto),
+        );
+        if (statisticsDto.state) {
+          clearInterval(interval);
+        }
+      }, 2000);
+    }
   }
 
   getConnectedClients = () => {

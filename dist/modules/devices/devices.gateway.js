@@ -8,6 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var DevicesGateway_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DevicesGateway = void 0;
@@ -38,8 +41,18 @@ let DevicesGateway = DevicesGateway_1 = class DevicesGateway {
         const userId = this.deviceSocket.getConnectedClientID(client);
         this.deviceSocket.removeClient(userId);
     }
+    typing(data) {
+        this.deviceSocket.emitStatistics(data);
+    }
 };
 exports.DevicesGateway = DevicesGateway;
+__decorate([
+    (0, websockets_1.SubscribeMessage)('statistics'),
+    __param(0, (0, websockets_1.MessageBody)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], DevicesGateway.prototype, "typing", null);
 exports.DevicesGateway = DevicesGateway = DevicesGateway_1 = __decorate([
     (0, websockets_1.WebSocketGateway)(),
     __metadata("design:paramtypes", [device_socket_service_1.DeviceSocketService])

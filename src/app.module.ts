@@ -4,10 +4,12 @@ import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { DevicesModule } from './modules/devices/devices.module';
 
 @Module({
   imports: [
     AuthModule,
+    DevicesModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

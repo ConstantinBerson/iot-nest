@@ -7,4 +7,12 @@ export declare class DevicesGateway {
     afterInit(): void;
     handleConnection(client: any, ..._args: any[]): Promise<void>;
     handleDisconnect(client: any): void;
+    typing(data: {
+        developerId: string;
+        email: string;
+        deviceId: string;
+        period_type: string;
+        period_value: string;
+        state: boolean;
+    }): void;
 }
